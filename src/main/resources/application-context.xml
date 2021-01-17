@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+       <beans xmlns="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+
+    <bean id="personEntity" class="cn.luotuoyulang.entitys.PersonEntity">
+        <property name="age" value="10"/>
+        <property name="name" value="小张"/>
+     </bean>
+
+    <bean id="beanPostProcessor" class="cn.luotuoyulang.entitys.MyBeanPostProcessor">
+    </bean>
+
+    <bean id="person" class="cn.luotuoyulang.entitys.Person" init-method="myInit"
+            destroy-method="myDestory" scope="singleton"
+    />
+
+</beans>
