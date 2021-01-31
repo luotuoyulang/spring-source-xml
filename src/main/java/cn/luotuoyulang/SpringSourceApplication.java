@@ -1,12 +1,12 @@
 package cn.luotuoyulang;
 
-import cn.luotuoyulang.annotation.EnableEntity;
-import cn.luotuoyulang.config.BeanPostProccessorConfig;
-import cn.luotuoyulang.config.MyConditionalConfiguration;
-import cn.luotuoyulang.config.MyLifgConfig;
+import cn.luotuoyulang.aopservice.AopService;
+import cn.luotuoyulang.config.*;
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Lazy;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @Description TODO
@@ -15,12 +15,12 @@ import org.springframework.context.annotation.Lazy;
  * @Author by liuyuhu
  * @Contact 17600520726@163.com 微信 aa249890950-5
  */
-@Lazy
-@EnableEntity
-@ComponentScan(value = {"cn.luotuoyulang.service","cn.luotuoyulang.config"})
+//@Lazy
+//@EnableEntity
+//@ComponentScan(value = {"cn.luotuoyulang.service","cn.luotuoyulang.config"})
 public class SpringSourceApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 //        AnnotationConfigApplicationContext applicationContext =
 //                new AnnotationConfigApplicationContext(SpringSourceApplication.class);
 //        applicationContext.getBean("personEntity", PersonEntity.class);
@@ -31,7 +31,9 @@ public class SpringSourceApplication {
 //        myFactory();
 //        configurable();
 //        lifeCycle();
-        beanPostProccessor ();
+//        beanPostProccessor ();
+//        initBean();
+        aop();
     }
 
     /**
@@ -69,5 +71,21 @@ public class SpringSourceApplication {
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(BeanPostProccessorConfig.class);
 //        annotationConfigApplicationContext.getBean("beanPost");
         annotationConfigApplicationContext.close();
+    }
+
+    public static void initBean () {
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(MyInitBeanConfig.class);
+        String[] beanDefinitionNames = annotationConfigApplicationContext.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            System.out.println("beanDefinitionName = " + beanDefinitionName);
+        }
+    }
+
+    public static void aop () {
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MyAopConfig.class);
+        AopService aopService = applicationContext.getBean("aopService", AopService.class);
+        aopService.a();
+        AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator = (AnnotationAwareAspectJAutoProxyCreator)applicationContext.getBean("org.springframework.aop.config.internalAutoProxyCreator",AnnotationAwareAspectJAutoProxyCreator.class);
+        System.out.println("annotationAwareAspectJAutoProxyCreator : " +annotationAwareAspectJAutoProxyCreator.toString());
     }
 }
